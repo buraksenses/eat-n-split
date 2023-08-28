@@ -1,1 +1,1 @@
-# eat-n-split
+Bill splitting calculator React app.
