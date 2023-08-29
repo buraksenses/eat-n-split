@@ -74,8 +74,10 @@ export default function App() {
       <div className="sidebar">
         {billFriend && (
           <BillSplittingForm
+            friends={friends}
             billFriend={billFriend}
             setFriends={setFriends}
+            friendsList={friends}
             key={Math.random()}
           />
         )}

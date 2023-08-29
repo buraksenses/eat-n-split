@@ -3,39 +3,38 @@ import { Label } from "./Utils/Label";
 import { Button } from "./Utils/Button";
 import { apiClient } from "./api/FriendApiService";
 
-export function BillSplittingForm({ billFriend, setFriends }) {
+export function BillSplittingForm({ billFriend, setFriends, friendsList }) {
   const [bill, setBill] = useState(0);
   const [yourExpense, setYourExpense] = useState(0);
   const [payPerson, setPayPerson] = useState(0);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const updatedBalance = yourExpense - (bill - yourExpense);
-    if (payPerson === "friend") {
-      setFriends((friends) =>
-        friends.map((friend) =>
-          friend.id === billFriend.id
-            ? { ...friend, balance: friend.balance + updatedBalance }
-            : friend
-        )
+
+    const updatedFriend = {
+      ...billFriend,
+      balance:
+        payPerson === "friend"
+          ? billFriend.balance + updatedBalance
+          : billFriend.balance - updatedBalance,
+    };
+
+    try {
+      const response = await apiClient.put(
+        `/friends/${updatedFriend.id}`,
+        updatedFriend
       );
-    } else {
-      setFriends((friends) =>
-        friends.map((friend) =>
-          friend.id === billFriend.ids
-            ? { ...friend, balance: friend.balance - updatedBalance }
-            : friend
-        )
+      console.log("Friend updated:", response.data);
+
+      const updatedFriends = friendsList.map((friend) =>
+        friend.id === updatedFriend.id ? updatedFriend : friend
       );
+      setFriends(updatedFriends);
+    } catch (error) {
+      console.error("Error updating friend:", error);
     }
   }
-
-  const updateFriend = (friend) => {
-    apiClient
-      .put(`/friends/${friend.id}`, friend)
-      .then((response) => setFriends(response.data._embedded))
-      .catch((error) => console.error("Error updating friend balance", error));
-  };
 
   return (
     <form className="form-split-bill" onSubmit={(e) => handleSubmit(e)}>
