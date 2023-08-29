@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Label } from "./Utils/Label";
 import { Button } from "./Utils/Button";
+import { apiClient } from "./api/FriendApiService";
 
 export function BillSplittingForm({ billFriend, setFriends }) {
   const [bill, setBill] = useState(0);
@@ -28,6 +29,10 @@ export function BillSplittingForm({ billFriend, setFriends }) {
       );
     }
   }
+
+  const updateFriend = (friend) => {
+    apiClient.put(`/friends/1`, friend);
+  };
 
   return (
     <form className="form-split-bill" onSubmit={(e) => handleSubmit(e)}>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Label } from "./Utils/Label";
 import { Button } from "./Utils/Button";
+import { apiClient } from "./api/FriendApiService";
 
 export function AddFriendForm({ isOpen, onAddFriend }) {
   const [newFriendName, setNewFriendName] = useState("");
@@ -16,7 +17,12 @@ export function AddFriendForm({ isOpen, onAddFriend }) {
     };
 
     onAddFriend((items) => [...items, newFriend]);
+    addFriend(newFriend);
   }
+
+  const addFriend = (friend) => {
+    apiClient.post("friends", friend);
+  };
 
   return (
     <div>
