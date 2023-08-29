@@ -1,6 +1,6 @@
 import { Button } from "./Utils/Button";
 
-export function Friend({ friend, onPayBill }) {
+export function Friend({ friend, onPayBill, billFriend }) {
   return (
     <li>
       <img src={friend.image} alt={friend.name}></img>
@@ -20,7 +20,13 @@ export function Friend({ friend, onPayBill }) {
 
       {friend.balance === 0 && <p>You and {friend.name} are even</p>}
 
-      <Button onClick={() => onPayBill(friend)}>Select</Button>
+      <Button
+        clickEvent={
+          friend === billFriend ? () => onPayBill("") : () => onPayBill(friend)
+        }
+      >
+        {friend === billFriend ? "Close" : "Select"}
+      </Button>
     </li>
   );
 }
